@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><title>La carte — Wellington Bay</title></helmet>
+<dc-import name="Header" active="carte" hint-size="100%,124px"></dc-import>
+<main style="font-family:'Public Sans',system-ui,sans-serif;color:#14213D">
+  <section style="max-width:1320px;margin:0 auto;padding:64px 32px 36px;display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;gap:10px;font-size:14px;color:#56607A"><a href="Accueil.dc.html">Accueil</a><span>/</span><span>La carte</span></div>
+      <h1 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:clamp(46px,6.4vw,84px);line-height:.98;letter-spacing:-.025em;color:#1F3567">La carte de la ville</h1>
+    </div>
+    <div style="display:flex;background:#FFFFFF;border:1px solid #DDD5C3">
+      <button onClick="{{ showDistricts }}" style="padding:13px 22px;border:0;font:700 15px 'Public Sans',sans-serif;cursor:pointer;background:{{ tabA.bg }};color:{{ tabA.fg }}">Districts</button>
+      <button onClick="{{ showRegion }}" style="padding:13px 22px;border:0;font:700 15px 'Public Sans',sans-serif;cursor:pointer;background:{{ tabB.bg }};color:{{ tabB.fg }}">Situation régionale</button>
+    </div>
+  </section>
+
+  <section data-screen-label="Carte — Plan" style="max-width:1320px;margin:0 auto;padding:0 32px 90px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px;align-items:start">
+    <div id="carte-interactive" style="grid-column:span 3;min-width:0;background:#FFFFFF;border:1px solid #DDD5C3;display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid #ECE6D8;flex-wrap:wrap">
+        <span style="font-weight:700;color:#1F3567">{{ mapTitle }}</span>
+        <span style="padding:5px 18px 5px 10px;background:#E2AC32;color:#14213D;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,0 100%)">Carte interactive bientôt disponible</span>
+      </div>
+      <div style="padding:16px;background:#F3EFE5;display:flex;justify-content:center">
+        <img src="{{ mapSrc }}" alt="{{ mapTitle }}" style="display:block;width:100%;height:auto;max-height:820px;object-fit:contain">
+      </div>
+    </div>
+    <aside style="display:flex;flex-direction:column;gap:12px">
+      <span style="font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#8A6A1E">Légende</span>
+      <sc-for list="{{ legend }}" as="l" hint-placeholder-count="5">
+        <a href="{{ l.href }}" style="display:flex;flex-direction:column;gap:6px;padding:16px 18px;background:#FFFFFF;border-left:5px solid {{ l.color }};color:#14213D" style-hover="color:#1F3567;background:#FBF6EA">
+          <span style="font-family:'Source Serif 4',Georgia,serif;font-size:22px;font-weight:600">{{ l.name }}</span>
+          <span style="font-size:13px;color:#56607A">{{ l.zone }}</span>
+        </a>
+      </sc-for>
+      <a href="#" style="margin-top:8px;padding:14px 18px;border:1.5px solid #1F3567;color:#1F3567;font-weight:700;text-align:center" style-hover="background:#1F3567;color:#FFFFFF">Télécharger le plan (PDF)</a>
+    </aside>
+  </section>
+
+  <section data-screen-label="Carte — Lieux" style="background:#FFFFFF">
+    <div style="max-width:1320px;margin:0 auto;padding:90px 32px;display:flex;flex-direction:column;gap:40px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#8A6A1E"><span style="color:#E2AC32">✷</span><span>Index des lieux</span></div>
+        <h2 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:clamp(34px,4vw,50px);line-height:1.06;color:#1F3567">Les lieux à repérer</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:36px">
+        <sc-for list="{{ index }}" as="g" hint-placeholder-count="5">
+          <div style="display:flex;flex-direction:column">
+            <div style="display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:3px solid {{ g.color }}"><span style="font-family:'Source Serif 4',Georgia,serif;font-size:22px;font-weight:600">{{ g.name }}</span></div>
+            <sc-for list="{{ g.places }}" as="p" hint-placeholder-count="5">
+              <span style="padding:12px 0;border-bottom:1px solid #ECE6D8;font-size:15px;color:#2B3650">{{ p }}</span>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1320px;margin:0 auto;padding:90px 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px">
+    <div style="padding:32px;background:#1F3567;color:#FFFFFF;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#F0C462">Par la route</span><span style="font-family:'Source Serif 4',Georgia,serif;font-size:26px;font-weight:600">Autoroute 43</span><span style="font-size:15px;line-height:1.6;color:#D5DCEA">Relie Wellington Bay à Milwaukee et Chicago. Évitez les heures de pointe vers le Downtown.</span></div>
+    <div style="padding:32px;background:#2D5A4A;color:#FFFFFF;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#F0C462">Sur place</span><span style="font-family:'Source Serif 4',Georgia,serif;font-size:26px;font-weight:600">Bus, tram, métro</span><span style="font-size:15px;line-height:1.6;color:#D8E6E0">Un réseau 24 h/24, 7 j/7 qui dessert les cinq districts.</span><a href="Se-deplacer.dc.html" style="color:#F0C462;font-weight:700">Plans du réseau →</a></div>
+    <div style="padding:32px;background:#E2AC32;color:#14213D;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#14213D">Accueil touristique</span><span style="font-family:'Source Serif 4',Georgia,serif;font-size:26px;font-weight:600">Office de tourisme</span><span style="font-size:15px;line-height:1.6">Plans papier, conseils et billetterie, Place de la Mairie, Downtown.</span></div>
+  </section>
+</main>
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { tab: 'districts' };
+  renderVals() {
+    const on = { bg: '#1F3567', fg: '#FFFFFF' }, off = { bg: '#FFFFFF', fg: '#1F3567' };
+    const d = this.state.tab === 'districts';
+    return {
+      tabA: d ? on : off, tabB: d ? off : on,
+      mapSrc: d ? 'img/doc/image8.png' : 'img/doc/image2.png',
+      mapTitle: d ? "Districts de l'agglomération de Wellington Bay" : 'Situation dans l\'État du Wisconsin',
+      showDistricts: () => this.setState({ tab: 'districts' }),
+      showRegion: () => this.setState({ tab: 'region' }),
+      legend: [
+        { name: 'Downtown', zone: 'Centre-ville · Haute densité', color: '#C8483B', href: 'District-Downtown.dc.html' },
+        { name: 'Millbrook', zone: 'Banlieue dense · Haute densité', color: '#2D5A4A', href: 'District-Millbrook.dc.html' },
+        { name: 'Hargrove', zone: 'Périurbain · Moyenne densité', color: '#B8861C', href: 'District-Hargrove.dc.html' },
+        { name: 'Oakwood', zone: 'Périurbain · Basse densité', color: '#2F7C78', href: 'District-Oakwood.dc.html' },
+        { name: 'Westfield', zone: 'Balnéaire · Zone dense', color: '#4A5FA8', href: 'District-Westfield.dc.html' }
+      ],
+      index: [
+        { name: 'Downtown', color: '#C8483B', places: ["Hôtel de Ville", 'Commissariat WBPD · Agence Thunderfront', 'Quartier des théâtres', 'Galeries d\'art contemporain', 'Esplanades & ruelles pavées'] },
+        { name: 'Westfield', color: '#4A5FA8', places: ['Aquadream Bay', 'Port de plaisance', 'Plages & criques', 'Canal de Westfield', 'Clubs du littoral'] },
+        { name: 'Millbrook', color: '#2D5A4A', places: ['Tours de Millbrook', 'Parcs de quartier', '3 lignes de métro', 'Commerces en rez-de-chaussée'] },
+        { name: 'Oakwood', color: '#2F7C78', places: ['Complexes résidentiels', 'Jardin d\'eau', 'Corridor vert', 'Zones industrielles de pointe'] },
+        { name: 'Hargrove', color: '#B8861C', places: ['Maisons du bord de Baie', 'Nouvelles places-ronds-points', 'Écoles élémentaires', 'Front de Baie'] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

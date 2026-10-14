@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><title>Agenda — Wellington Bay</title></helmet>
+<dc-import name="Header" active="agenda" hint-size="100%,124px"></dc-import>
+<main style="font-family:'Public Sans',system-ui,sans-serif;color:#14213D">
+  <section style="max-width:1320px;margin:0 auto;padding:64px 32px 40px;display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;gap:10px;font-size:14px;color:#56607A"><a href="Accueil.dc.html">Accueil</a><span>/</span><span>Agenda</span></div>
+    <h1 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:clamp(46px,6.4vw,84px);line-height:.98;letter-spacing:-.025em;color:#1F3567">Agenda de la Baie</h1>
+    <p style="margin:0;max-width:640px;font-size:19px;line-height:1.6;color:#2B3650">Festivals culturels et événements sportifs rythment l'année et unissent la communauté. Voici ce qui vous attend cet automne.</p>
+  </section>
+  <section style="max-width:1320px;margin:0 auto;padding:0 32px 56px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));background:#1F3567;color:#FFFFFF">
+      <div style="min-height:380px;background:#ccc url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1400&q=75&auto=format&fit=crop') center/cover"></div>
+      <div style="padding:48px;display:flex;flex-direction:column;gap:16px;justify-content:center">
+        <span style="align-self:flex-start;padding:5px 20px 5px 10px;background:#E2AC32;color:#14213D;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,0 100%)">À la une</span>
+        <span style="font-family:'Source Serif 4',Georgia,serif;font-size:clamp(36px,4vw,54px);font-weight:600;line-height:1">Bay Lights Festival</span>
+        <span style="font-size:17px;color:#F0C462;font-weight:700">24 – 26 octobre 2026 · Esplanade du Downtown</span>
+        <p style="margin:0;font-size:17px;line-height:1.65;color:#D5DCEA">Trois soirées de concerts et d'illuminations sur les tours-miroirs du centre-ville. Métro et trams renforcés toute la nuit.</p>
+      </div>
+    </div>
+  </section>
+  <section style="max-width:1320px;margin:0 auto;padding:0 32px 100px;display:flex;flex-direction:column;gap:28px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+        <button onClick="{{ f.pick }}" style="padding:10px 18px;border:1.5px solid #1F3567;font:700 14px 'Public Sans',sans-serif;cursor:pointer;background:{{ f.bg }};color:{{ f.fg }}">{{ f.label }}</button>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-direction:column;border-top:2px solid #1F3567">
+      <sc-for list="{{ list }}" as="e" hint-placeholder-count="8">
+        <div style="display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:28px;align-items:center;padding:22px 0;border-bottom:1px solid #DDD5C3">
+          <div style="display:flex;flex-direction:column;align-items:center;padding:10px 0;background:#FFFFFF;border-top:4px solid {{ e.color }}"><span style="font-family:'Source Serif 4',Georgia,serif;font-size:34px;font-weight:600;line-height:1;color:#1F3567">{{ e.day }}</span><span style="font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#8A6A1E;margin-top:4px">{{ e.month }}</span></div>
+          <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+            <span style="font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#56607A">{{ e.cat }} · {{ e.district }}</span>
+            <span style="font-family:'Source Serif 4',Georgia,serif;font-size:24px;font-weight:600;line-height:1.2">{{ e.title }}</span>
+            <span style="font-size:15px;color:#56607A">{{ e.place }}</span>
+          </div>
+          <span style="font-weight:700;color:#1F3567;white-space:nowrap">{{ e.price }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</main>
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const EV = [
+  { day: '24', month: 'Oct.', cat: 'Festival', district: 'Downtown', color: '#C8483B', title: 'Bay Lights Festival', place: 'Esplanade du Downtown · 18 h – 2 h', price: 'Gratuit' },
+  { day: '27', month: 'Oct.', cat: 'Culture', district: 'Downtown', color: '#C8483B', title: 'Saison symphonique : ouverture', place: 'Salle de concert du Downtown · 20 h', price: 'Dès 25 $' },
+  { day: '31', month: 'Oct.', cat: 'Famille', district: 'Hargrove', color: '#B8861C', title: 'Halloween sur les nouvelles places', place: 'Places de quartier de Hargrove · 16 h', price: 'Gratuit' },
+  { day: '02', month: 'Nov.', cat: 'Sport', district: 'Downtown → Westfield', color: '#4A5FA8', title: 'Grand Prix cycliste de la Baie', place: "Départ Hôtel de Ville · Arrivée front de lac", price: 'Inscription' },
+  { day: '08', month: 'Nov.', cat: 'Famille', district: 'Westfield', color: '#4A5FA8', title: 'Nocturne à Aquadream Bay', place: 'Aquadream Bay · 19 h – minuit', price: 'Dès 18 $' },
+  { day: '15', month: 'Nov.', cat: 'Culture', district: 'Downtown', color: '#C8483B', title: 'Nuit des musées', place: 'Musées et galeries du centre-ville', price: 'Gratuit' },
+  { day: '22', month: 'Nov.', cat: 'Festival', district: 'Millbrook', color: '#2D5A4A', title: 'Marché d\'automne de Millbrook', place: 'Parcs de Millbrook · 10 h – 19 h', price: 'Gratuit' },
+  { day: '29', month: 'Nov.', cat: 'Sport', district: 'Downtown', color: '#C8483B', title: 'Match de gala au Stade de la Baie', place: 'Stade de la Baie · 19 h 30', price: 'Dès 40 $' },
+  { day: '06', month: 'Déc.', cat: 'Festival', district: 'Westfield', color: '#4A5FA8', title: 'Parade des bateaux illuminés', place: 'Port de plaisance de Westfield · 18 h', price: 'Gratuit' }
+];
+class Component extends DCLogic {
+  state = { cat: 'Tous' };
+  renderVals() {
+    const cats = ['Tous', 'Festival', 'Culture', 'Sport', 'Famille'];
+    return {
+      filters: cats.map(c => ({ label: c, bg: c === this.state.cat ? '#1F3567' : '#FFFFFF', fg: c === this.state.cat ? '#FFFFFF' : '#1F3567', pick: () => this.setState({ cat: c }) })),
+      list: EV.filter(e => this.state.cat === 'Tous' || e.cat === this.state.cat)
+    };
+  }
+}
+</script>
+</body>
+</html>

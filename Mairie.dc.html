@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><title>Mairie &amp; services — Wellington Bay</title></helmet>
+<dc-import name="Header" active="mairie" hint-size="100%,124px"></dc-import>
+<main style="font-family:'Public Sans',system-ui,sans-serif;color:#14213D">
+  <section data-screen-label="Mairie — Hero" style="background:#FFFFFF">
+    <div style="max-width:1320px;margin:0 auto;padding:64px 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:56px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;gap:10px;font-size:14px;color:#56607A"><a href="Accueil.dc.html">Accueil</a><span>/</span><span>Mairie &amp; services</span></div>
+        <h1 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:clamp(46px,6.4vw,84px);line-height:.98;letter-spacing:-.025em;color:#1F3567">Votre mairie</h1>
+        <p style="margin:0;max-width:540px;font-size:18px;line-height:1.65;color:#2B3650">Depuis l'Hôtel de Ville du Downtown, la Ville de Wellington Bay accompagne ses 8,5 millions d'habitants au quotidien : démarches, logement, écoles, sécurité et cadre de vie.</p>
+        <div style="display:flex;background:#F7F3EA;border:1px solid #DDD5C3;max-width:540px">
+          <input placeholder="Rechercher une démarche…" style="flex:1;min-width:0;padding:16px 18px;border:0;background:transparent;font:16px 'Public Sans',sans-serif;color:#14213D">
+          <button style="padding:0 22px;border:0;background:#1F3567;color:#FFFFFF;font:700 15px 'Public Sans',sans-serif;cursor:pointer">Rechercher</button>
+        </div>
+      </div>
+      <div style="min-height:420px;background:#ccc url('https://images.unsplash.com/photo-1555848962-6e79363ec58f?w=1400&q=75&auto=format&fit=crop') center/cover"></div>
+    </div>
+  </section>
+
+  <section id="demarches" style="max-width:1320px;margin:0 auto;padding:90px 32px;display:flex;flex-direction:column;gap:36px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#8A6A1E"><span style="color:#E2AC32">✷</span><span>Démarches en ligne</span></div>
+      <h2 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:clamp(34px,4vw,50px);line-height:1.06;color:#1F3567">Vos services, en quelques clics</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:2px;background:#DDD5C3;border:2px solid #DDD5C3">
+      <sc-for list="{{ services }}" as="s" hint-placeholder-count="8">
+        <a href="#" style="background:#FFFFFF;padding:28px;display:flex;flex-direction:column;gap:10px;color:#14213D" style-hover="background:#FBF6EA;color:#1F3567">
+          <span style="font-family:'Source Serif 4',Georgia,serif;font-size:23px;font-weight:600">{{ s.t }}</span>
+          <span style="font-size:15px;line-height:1.55;color:#56607A">{{ s.d }}</span>
+          <span style="font-weight:700;color:#1F3567;font-size:14px;margin-top:4px">Accéder →</span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="securite" style="background:#16264A;color:#FFFFFF">
+    <div style="max-width:1320px;margin:0 auto;padding:90px 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:56px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#F0C462"><span>✷</span><span>Sécurité publique</span></div>
+        <h2 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:clamp(34px,4vw,50px);line-height:1.06">WBPD &amp; agence Thunderfront</h2>
+        <p style="margin:0;font-size:17px;line-height:1.7;color:#D5DCEA">Le commissariat du Wellington Bay Police Department, situé au Downtown, veille avec l'agence Thunderfront à la sécurité et au respect des lois. Résultat : un taux de criminalité inférieur à 4,5 %.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div style="padding:26px;background:#C8483B;display:flex;flex-direction:column;gap:6px"><span style="font-family:'Source Serif 4',Georgia,serif;font-size:48px;font-weight:600;line-height:1">911</span><span style="font-size:14px">Urgences — police, pompiers, secours</span></div>
+        <div style="padding:26px;background:#1F3567;display:flex;flex-direction:column;gap:6px"><span style="font-family:'Source Serif 4',Georgia,serif;font-size:48px;font-weight:600;line-height:1">311</span><span style="font-size:14px;color:#D5DCEA">Services municipaux non urgents</span></div>
+        <div style="grid-column:span 2;padding:22px 26px;border:1px solid rgba(255,255,255,.2);font-size:15px;line-height:1.6;color:#D5DCEA">Commissariat central WBPD · Downtown · ouvert 24 h/24</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="actualites" style="max-width:1320px;margin:0 auto;padding:90px 32px;display:flex;flex-direction:column;gap:36px">
+    <div style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#8A6A1E"><span style="color:#E2AC32">✷</span><span>Actualités municipales</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px">
+      <sc-for list="{{ news }}" as="n" hint-placeholder-count="3">
+        <article style="display:flex;flex-direction:column;gap:14px">
+          <div style="aspect-ratio:16/10;background:#ccc url('{{ n.img }}') center/cover"></div>
+          <span style="font-size:13px;font-weight:700;color:#8A6A1E">{{ n.date }} · {{ n.tag }}</span>
+          <span style="font-family:'Source Serif 4',Georgia,serif;font-size:24px;font-weight:600;line-height:1.2;color:#1F3567">{{ n.title }}</span>
+          <span style="font-size:15px;line-height:1.6;color:#56607A">{{ n.text }}</span>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="contact" style="background:#FFFFFF;border-top:1px solid #ECE6D8">
+    <div style="max-width:1320px;margin:0 auto;padding:90px 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:56px">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <h2 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:clamp(34px,4vw,50px);line-height:1.06;color:#1F3567">Nous contacter</h2>
+        <div style="display:flex;flex-direction:column;border-top:2px solid #1F3567;font-size:16px">
+          <div style="display:grid;grid-template-columns:140px 1fr;gap:16px;padding:16px 0;border-bottom:1px solid #DDD5C3"><span style="font-weight:700;color:#8A6A1E">Adresse</span><span>Hôtel de Ville, Place de la Mairie, Downtown — Wellington Bay, WI 53513</span></div>
+          <div style="display:grid;grid-template-columns:140px 1fr;gap:16px;padding:16px 0;border-bottom:1px solid #DDD5C3"><span style="font-weight:700;color:#8A6A1E">Horaires</span><span>Lundi – vendredi, 8 h – 18 h · Samedi, 9 h – 12 h</span></div>
+          <div style="display:grid;grid-template-columns:140px 1fr;gap:16px;padding:16px 0;border-bottom:1px solid #DDD5C3"><span style="font-weight:700;color:#8A6A1E">Téléphone</span><span>311 (depuis Wellington Bay)</span></div>
+          <div style="display:grid;grid-template-columns:140px 1fr;gap:16px;padding:16px 0;border-bottom:1px solid #DDD5C3"><span style="font-weight:700;color:#8A6A1E">Accès</span><span>Métro M1 — station Hôtel de Ville</span></div>
+        </div>
+      </div>
+      <form style="display:flex;flex-direction:column;gap:14px;background:#F7F3EA;padding:32px">
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:700">Nom<input style="padding:13px 14px;border:1px solid #CFC6B2;background:#FFFFFF;font:16px 'Public Sans',sans-serif"></label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:700">E-mail<input style="padding:13px 14px;border:1px solid #CFC6B2;background:#FFFFFF;font:16px 'Public Sans',sans-serif"></label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:700">Votre message<textarea rows="5" style="padding:13px 14px;border:1px solid #CFC6B2;background:#FFFFFF;font:16px 'Public Sans',sans-serif;resize:vertical"></textarea></label>
+        <button type="button" style="align-self:flex-start;padding:15px 34px 15px 22px;border:0;background:#1F3567;color:#FFFFFF;font:700 15px 'Public Sans',sans-serif;cursor:pointer;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 50%,calc(100% - 14px) 100%,0 100%)">Envoyer</button>
+      </form>
+    </div>
+  </section>
+</main>
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const U = (id) => `https://images.unsplash.com/photo-${id}?w=900&q=75&auto=format&fit=crop`;
+    return {
+      services: [
+        { t: 'État civil', d: 'Naissance, mariage, décès, actes et certificats.' },
+        { t: 'Logement', d: 'Logements abordables, studios étudiants, aides.' },
+        { t: 'Écoles & bus scolaires', d: 'Inscriptions et liaisons gratuites.' },
+        { t: 'Urbanisme', d: 'Permis de construire, plans des districts.' },
+        { t: 'Transports', d: 'Abonnements WBT, cartes résidents.' },
+        { t: 'Propreté & voirie', d: 'Collecte, encombrants, signalements.' },
+        { t: 'Espaces verts', d: 'Parcs, jardins communs, aires de jeu.' },
+        { t: 'Entreprises', d: 'Licences, marchés publics, implantation.' }
+      ],
+      news: [
+        { date: '10 oct. 2026', tag: 'Urbanisme', img: U('1542037104857-ffbb0b9155fb'), title: 'Hargrove : trois nouvelles places avec rond-point', text: "Espaces verts et commerces de proximité pour réduire l'usage de la voiture dans le quartier." },
+        { date: '06 oct. 2026', tag: 'Transports', img: U('1515165562839-978bbcf18277'), title: 'Métro : fréquence renforcée sur la ligne M3', text: "Plus de rames entre Millbrook Sud et le port de Westfield, notamment le week-end." },
+        { date: '29 sept. 2026', tag: 'Environnement', img: U('1585320806297-9794b3e4eeae'), title: 'En tête du classement national de qualité de vie', text: "Écologie et cadre de vie hissent à nouveau la Bay City au sommet des classements." }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><title>Se déplacer — Wellington Bay</title><script src="metro-data.js"></script></helmet>
+<dc-import name="Header" active="transports" hint-size="100%,124px"></dc-import>
+<main style="font-family:'Public Sans',system-ui,sans-serif;color:#14213D">
+
+  <section data-screen-label="Transports — En-tête" style="background:#FFFFFF;border-bottom:1px solid #ECE6D8">
+    <div style="max-width:1320px;margin:0 auto;padding:56px 32px 0;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;gap:10px;font-size:14px;color:#56607A"><a href="Accueil.dc.html">Accueil</a><span>/</span><span>Se déplacer</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap">
+        <h1 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:clamp(44px,6vw,80px);line-height:.98;letter-spacing:-.025em;color:#1F3567">Se déplacer</h1>
+        <p style="margin:0;max-width:520px;font-size:17px;line-height:1.6;color:#2B3650">Métro, tram, bus, train régional et liaison aéroport : le réseau Wellington Bay Transit fonctionne 24 h/24, 7 j/7.</p>
+      </div>
+    </div>
+    <div style="max-width:1320px;margin:36px auto 0;padding:0 32px">
+      <div style="background:#1F3567;color:#FFFFFF;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));align-items:end;gap:16px;padding:24px">
+        <label style="display:flex;flex-direction:column;gap:8px;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#F0C462">Départ
+          <select ref="{{ fromRef }}" onChange="{{ setFrom }}" style="padding:14px 12px;border:0;background:#FFFFFF;color:#14213D;font:600 16px 'Public Sans',sans-serif;letter-spacing:0;text-transform:none">
+            <sc-for list="{{ fromOpts }}" as="o" hint-placeholder-count="1"><option value="{{ o.id }}" selected="{{ o.sel }}">{{ o.name }}</option></sc-for>
+          </select>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:8px;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#F0C462">Arrivée
+          <select ref="{{ toRef }}" onChange="{{ setTo }}" style="padding:14px 12px;border:0;background:#FFFFFF;color:#14213D;font:600 16px 'Public Sans',sans-serif;letter-spacing:0;text-transform:none">
+            <sc-for list="{{ toOpts }}" as="o" hint-placeholder-count="1"><option value="{{ o.id }}" selected="{{ o.sel }}">{{ o.name }}</option></sc-for>
+          </select>
+        </label>
+        <div style="grid-column:span 2;min-width:0;display:flex;flex-direction:column;gap:8px;padding:12px 16px;background:#16264A;min-height:52px;justify-content:center">
+          <span style="display:flex;justify-content:space-between;gap:12px;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#AEB9D0"><span>Itinéraire conseillé</span><span style="color:#F0C462">{{ routeTime }}</span></span>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:14px;font-weight:600">
+            <sc-for list="{{ routeSteps }}" as="r" hint-placeholder-count="2">
+              <span style="display:flex;align-items:center;gap:6px"><span style="padding:2px 8px;border-radius:10px;background:{{ r.color }};color:{{ r.fg }};font-size:11px;font-weight:800">{{ r.line }}</span><span>{{ r.text }}</span></span>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1320px;margin:0 auto;padding:0 32px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));border:1px solid #ECE6D8;border-top:0">
+        <sc-for list="{{ status }}" as="s" hint-placeholder-count="6">
+          <div style="padding:16px 18px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;border-right:1px solid #ECE6D8">
+            <span style="width:34px;height:34px;flex:none;border-radius:{{ s.radius }};background:{{ s.color }};color:{{ s.fg }};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px">{{ s.code }}</span>
+            <span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:14px;font-weight:700">{{ s.name }}</span><span style="display:flex;align-items:center;gap:6px;font-size:13px;color:{{ s.stColor }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ s.stColor }}"></span>{{ s.state }}</span></span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="height:56px"></div>
+  </section>
+
+  <section id="plan" data-screen-label="Transports — Plan du métro" data-no-reveal="" style="background:#FFFFFF;border-bottom:1px solid #ECE6D8">
+    <div style="max-width:1440px;margin:0 auto;padding:64px 32px 56px;display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#8A6A1E">Plan interactif · {{ nStations }} stations</span>
+          <h2 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:clamp(32px,3.6vw,46px);line-height:1.06;color:#1F3567">Le plan du réseau WBT</h2>
+        </div>
+        <label style="display:flex;align-items:center;gap:10px;padding:0 14px;border:1.5px solid #DDD5C3;background:#FFFFFF;min-width:min(100%,320px)">
+          <span style="color:#8A6A1E;font-size:16px">⌕</span>
+          <input list="wb-stations" placeholder="Rechercher une station…" onChange="{{ onSearch }}" style="flex:1;min-width:0;padding:13px 0;border:0;outline:none;font:500 15px 'Public Sans',sans-serif;color:#14213D;background:transparent">
+          <datalist id="wb-stations"><sc-for list="{{ stationOpts }}" as="o" hint-placeholder-count="0"><option value="{{ o.name }}"></option></sc-for></datalist>
+        </label>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <sc-for list="{{ legend }}" as="b" hint-placeholder-count="10">
+          <button onClick="{{ b.pick }}" title="{{ b.termini }}" style="display:flex;align-items:center;gap:8px;padding:8px 12px 8px 8px;border:1.5px solid {{ b.border }};background:{{ b.bg }};color:#14213D;font:700 13px 'Public Sans',sans-serif;cursor:pointer">
+            <span style="width:26px;height:8px;border-radius:4px;background:{{ b.swatch }}"></span>{{ b.name }}
+          </button>
+        </sc-for>
+      </div>
+      <div ref="{{ frameRef }}" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" onPointerCancel="{{ onUp }}" style="position:relative;height:clamp(520px,78vh,880px);border:1px solid #DDD5C3;background:#FBF8F1;overflow:hidden;cursor:{{ cursor }};touch-action:none;user-select:none;-webkit-user-select:none;overscroll-behavior:contain;contain:strict;overflow-anchor:none">
+        {{ mapSvg }}
+        <div style="position:absolute;left:14px;top:14px;display:flex;flex-direction:column;background:#FFFFFF;border:1px solid #DDD5C3;box-shadow:0 6px 18px rgba(20,33,61,.12)">
+          <button onClick="{{ zoomIn }}" aria-label="Zoomer" style="width:42px;height:42px;border:0;border-bottom:1px solid #ECE6D8;background:#FFFFFF;font:700 20px 'Public Sans',sans-serif;color:#1F3567;cursor:pointer">+</button>
+          <button onClick="{{ zoomOut }}" aria-label="Dézoomer" style="width:42px;height:42px;border:0;border-bottom:1px solid #ECE6D8;background:#FFFFFF;font:700 20px 'Public Sans',sans-serif;color:#1F3567;cursor:pointer">−</button>
+          <button onClick="{{ zoomReset }}" aria-label="Vue d'ensemble" style="width:42px;height:42px;border:0;background:#FFFFFF;font:700 14px 'Public Sans',sans-serif;color:#1F3567;cursor:pointer">⤢</button>
+        </div>
+        <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}">
+          <div onPointerDown="{{ stop }}" style="position:absolute;right:14px;top:14px;width:min(320px,calc(100% - 90px));background:#FFFFFF;border:1px solid #DDD5C3;border-top:5px solid #1F3567;box-shadow:0 14px 34px rgba(20,33,61,.18);padding:20px;display:flex;flex-direction:column;gap:12px;cursor:default">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+              <span style="font-family:'Source Serif 4',Georgia,serif;font-size:26px;font-weight:600;line-height:1.05;color:#1F3567">{{ sel.name }}</span>
+              <button onClick="{{ clearSel }}" aria-label="Fermer" style="border:0;background:transparent;font-size:20px;color:#56607A;cursor:pointer;line-height:1">×</button>
+            </div>
+            <span style="font-size:13px;color:#56607A">District · {{ sel.district }}</span>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <sc-for list="{{ sel.lines }}" as="l" hint-placeholder-count="1">
+                <span style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600"><span style="width:22px;height:8px;border-radius:4px;background:{{ l.color }}"></span>{{ l.name }}<span style="margin-left:auto;font-size:12px;color:#56607A">{{ l.next }}</span></span>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:4px">
+              <button onClick="{{ setAsFrom }}" style="flex:1;padding:10px;border:1.5px solid #1F3567;background:#FFFFFF;color:#1F3567;font:700 13px 'Public Sans',sans-serif;cursor:pointer">Partir d'ici</button>
+              <button onClick="{{ setAsTo }}" style="flex:1;padding:10px;border:0;background:#1F3567;color:#FFFFFF;font:700 13px 'Public Sans',sans-serif;cursor:pointer">Aller ici</button>
+            </div>
+          </div>
+        </sc-if>
+        <span style="position:absolute;right:12px;bottom:10px;font:700 11px Arial,sans-serif;color:#14213D;background:rgba(255,255,255,.8);padding:2px 6px">Wellington Bay Transit · Plan schématique 2026</span>
+      </div>
+      <p style="margin:0;font-size:14px;color:#56607A">Glissez pour vous déplacer, molette ou boutons pour zoomer. Cliquez sur une ligne pour l'isoler, sur une station pour ses correspondances.</p>
+    </div>
+  </section>
+
+  <section data-screen-label="Transports — Modes" style="background:#FFFFFF">
+    <div style="max-width:1320px;margin:0 auto;padding:80px 32px;display:flex;flex-direction:column;gap:32px">
+      <h2 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:clamp(32px,3.6vw,46px);line-height:1.06;color:#1F3567">Tous les modes de transport</h2>
+      <div style="display:flex;flex-direction:column;border-top:2px solid #1F3567">
+        <sc-for list="{{ modes }}" as="m" hint-placeholder-count="7">
+          <div style="display:grid;grid-template-columns:64px minmax(0,1.2fr) minmax(0,2fr) minmax(0,1fr);gap:24px;align-items:center;padding:24px 0;border-bottom:1px solid #ECE6D8">
+            <span style="width:52px;height:52px;border-radius:{{ m.radius }};background:{{ m.color }};color:{{ m.fg }};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px">{{ m.code }}</span>
+            <span style="font-family:'Source Serif 4',Georgia,serif;font-size:24px;font-weight:600">{{ m.name }}</span>
+            <span style="font-size:15px;line-height:1.55;color:#56607A">{{ m.text }}</span>
+            <span style="font-size:14px;font-weight:700;color:#1F3567;text-align:right">{{ m.freq }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Transports — Aéroport & train" style="max-width:1320px;margin:0 auto;padding:80px 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px">
+    <article style="background:#FFFFFF;display:flex;flex-direction:column">
+      <div style="aspect-ratio:16/9;background:#ccc url('https://images.unsplash.com/photo-1529074963764-98f45c47344b?w=1200&q=75&auto=format&fit=crop') center/cover"></div>
+      <div style="padding:32px;display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#8A6A1E">Aéroport international · WBY</span>
+        <span style="font-family:'Source Serif 4',Georgia,serif;font-size:30px;font-weight:600;color:#1F3567">Rejoindre l'aéroport en 18 minutes</span>
+        <span style="font-size:16px;line-height:1.65;color:#2B3650">L'Airport Express relie la Gare Centrale au terminal toutes les 10 minutes, jour et nuit. Vols directs vers les grandes villes américaines et le Canada.</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:6px">
+          <div style="padding:14px;background:#F7F3EA;display:flex;flex-direction:column;gap:2px"><span style="font-family:'Source Serif 4',Georgia,serif;font-size:24px;font-weight:600;color:#1F3567">18 min</span><span style="font-size:13px;color:#56607A">depuis le centre</span></div>
+          <div style="padding:14px;background:#F7F3EA;display:flex;flex-direction:column;gap:2px"><span style="font-family:'Source Serif 4',Georgia,serif;font-size:24px;font-weight:600;color:#1F3567">10 min</span><span style="font-size:13px;color:#56607A">fréquence</span></div>
+          <div style="padding:14px;background:#F7F3EA;display:flex;flex-direction:column;gap:2px"><span style="font-family:'Source Serif 4',Georgia,serif;font-size:24px;font-weight:600;color:#1F3567">5 $</span><span style="font-size:13px;color:#56607A">le trajet</span></div>
+        </div>
+      </div>
+    </article>
+    <article style="background:#FFFFFF;display:flex;flex-direction:column">
+      <div style="aspect-ratio:16/9;background:#ccc url('https://images.unsplash.com/photo-1532105956626-9569c03602f6?w=1200&q=75&auto=format&fit=crop') center/cover"></div>
+      <div style="padding:32px;display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#8A6A1E">Gare Centrale · Train régional R</span>
+        <span style="font-family:'Source Serif 4',Georgia,serif;font-size:30px;font-weight:600;color:#1F3567">Milwaukee et Chicago, sans la voiture</span>
+        <span style="font-size:16px;line-height:1.65;color:#2B3650">Plutôt que l'autoroute 43 et ses bouchons, prenez le train régional depuis la Gare Centrale, au cœur du Downtown. Correspondances directes avec les lignes Orange et Violette et l'Airport Express.</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:6px">
+          <div style="padding:14px;background:#F7F3EA;display:flex;flex-direction:column;gap:2px"><span style="font-family:'Source Serif 4',Georgia,serif;font-size:24px;font-weight:600;color:#1F3567">1 h 35</span><span style="font-size:13px;color:#56607A">Milwaukee</span></div>
+          <div style="padding:14px;background:#F7F3EA;display:flex;flex-direction:column;gap:2px"><span style="font-family:'Source Serif 4',Georgia,serif;font-size:24px;font-weight:600;color:#1F3567">3 h 10</span><span style="font-size:13px;color:#56607A">Chicago</span></div>
+          <div style="padding:14px;background:#F7F3EA;display:flex;flex-direction:column;gap:2px"><span style="font-family:'Source Serif 4',Georgia,serif;font-size:24px;font-weight:600;color:#1F3567">30 min</span><span style="font-size:13px;color:#56607A">fréquence</span></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section data-screen-label="Transports — Bus" style="background:#F0E8D6">
+    <div style="max-width:1320px;margin:0 auto;padding:72px 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:48px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <span style="font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#8A6A1E">Bus &amp; autocars WBT</span>
+        <h2 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:clamp(30px,3.4vw,42px);line-height:1.08;color:#1F3567">Les couleurs de la ville, dans chaque quartier</h2>
+        <p style="margin:0;font-size:16px;line-height:1.65;color:#2B3650">Plus de 140 lignes de bus desservent les cinq districts, jusqu'aux zones pavillonnaires d'Oakwood et de Hargrove. Les bus scolaires assurent des liaisons gratuites vers les collèges et lycées.</p>
+      </div>
+      <img data-reveal="left" src="img/bus.png" alt="Autocar Wellington Bay Transit" style="width:100%;height:auto;display:block">
+    </div>
+  </section>
+
+  <section data-screen-label="Transports — Tarifs" style="max-width:1320px;margin:0 auto;padding:80px 32px;display:flex;flex-direction:column;gap:28px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap">
+      <h2 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:clamp(32px,3.6vw,46px);line-height:1.06;color:#1F3567">Titres &amp; tarifs</h2>
+      <span style="font-size:15px;color:#56607A">Valables sur métro, tram, bus et train dans la ville</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:2px;background:#DDD5C3;border:2px solid #DDD5C3">
+      <sc-for list="{{ fares }}" as="f" hint-placeholder-count="4">
+        <div style="background:#FFFFFF;padding:28px;display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:14px;font-weight:700;color:#14213D">{{ f.k }}</span>
+          <span style="font-family:'Source Serif 4',Georgia,serif;font-size:44px;font-weight:600;color:#1F3567;line-height:1.1">{{ f.p }}</span>
+          <span style="font-size:14px;color:#56607A">{{ f.d }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</main>
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const MODES = [
+  { code: 'M', name: 'Métro', color: '#1F3567', fg: '#FFFFFF', radius: '50%', text: 'Six lignes (Rouge, Orange, Verte, Bleue, Violette, Jaune) qui rayonnent depuis le Downtown vers les cinq districts.', freq: '3 min en pointe · 24 h/24' },
+  { code: 'T', name: 'Tram du littoral', color: '#F28CB1', fg: '#14213D', radius: '50%', text: 'Le long du lac Michigan, de Lakefront à Aquadream Bay, en desservant plages et marinas de Westfield.', freq: '5 min · 24 h/24' },
+  { code: 'B', name: 'Bus', color: '#E2AC32', fg: '#14213D', radius: '8px', text: 'Plus de 140 lignes dans les cinq districts, dont un réseau de nuit renforcé.', freq: '8–15 min' },
+  { code: 'R', name: 'Train régional', color: '#FFD24D', fg: '#14213D', radius: '8px', text: 'Depuis la Gare Centrale vers Milwaukee et Chicago au sud, Wausau au nord.', freq: 'Toutes les 30 min' },
+  { code: 'AX', name: 'Airport Express', color: '#A2A2A2', fg: '#14213D', radius: '8px', text: 'Liaison directe Gare Centrale – Aéroport international WBY.', freq: '10 min · 18 min de trajet' },
+  { code: 'N', name: 'Navette lacustre', color: '#3AA8C1', fg: '#FFFFFF', radius: '8px', text: 'Traversée de la Baie entre Hargrove Lakeside, Pine Island et Oakwood Centre, d\'avril à octobre.', freq: '20 min · saisonnier' },
+  { code: 'V', name: 'Vélo en libre-service', color: '#2D5A4A', fg: '#FFFFFF', radius: '8px', text: '600 stations BayBike et des pistes cyclables continues à Oakwood, Hargrove et sur le front de lac.', freq: '30 min gratuites' }
+];
+const STATUS = [
+  { code: 'M', name: 'Métro', color: '#1F3567', fg: '#FFFFFF', radius: '50%', state: 'Trafic normal', stColor: '#2D7A55' },
+  { code: 'T', name: 'Tram', color: '#F28CB1', fg: '#14213D', radius: '50%', state: 'Trafic normal', stColor: '#2D7A55' },
+  { code: 'B', name: 'Bus', color: '#E2AC32', fg: '#14213D', radius: '8px', state: 'Ralentissements', stColor: '#B8641C' },
+  { code: 'R', name: 'Train', color: '#FFD24D', fg: '#14213D', radius: '8px', state: 'Trafic normal', stColor: '#2D7A55' },
+  { code: '✈', name: 'Aéroport', color: '#A2A2A2', fg: '#14213D', radius: '8px', state: 'Trafic normal', stColor: '#2D7A55' },
+  { code: '43', name: 'Autoroute 43', color: '#56607A', fg: '#FFFFFF', radius: '8px', state: 'Dense vers Downtown', stColor: '#B8641C' }
+];
+const FARES = [
+  { k: 'Ticket unitaire', p: '2,50 $', d: '90 minutes, correspondances incluses' },
+  { k: 'Pass 24 heures', p: '7 $', d: 'Illimité, Airport Express inclus' },
+  { k: 'Pass visiteur 7 jours', p: '25 $', d: 'Avec 10 % de réduction à Aquadream Bay' },
+  { k: 'Abonnement mensuel', p: '65 $', d: 'Résidents · demi-tarif étudiants' }
+];
+const C = 20;
+class Component extends DCLogic {
+  state = { ready: !!window.WB_METRO, line: null, sel: null, fw: 1200, fh: 700, from: 'Aéroport WBY', to: 'Aquadream Bay', vb: null, drag: null };
+  fromRef = React.createRef(); toRef = React.createRef(); frameRef = React.createRef();
+  componentDidMount() {
+    if (!window.WB_METRO) { this._r = () => this.setState({ ready: true }); window.addEventListener('wb-metro-ready', this._r); this._p = setInterval(() => { if (window.WB_METRO) { clearInterval(this._p); this.setState({ ready: true }); } }, 200); }
+    this._wheel = (e) => { e.preventDefault(); e.stopPropagation(); this.zoomAt(e.deltaY < 0 ? 0.85 : 1.18, e.clientX, e.clientY); };
+    this._attach = setInterval(() => { const el = this.frameRef.current; if (el && el !== this._wEl) { if (this._wEl) this._wEl.removeEventListener('wheel', this._wheel); this._wEl = el; el.addEventListener('wheel', this._wheel, { passive: false }); if (this._ro) this._ro.disconnect(); this._ro = new ResizeObserver(() => { const r = el.getBoundingClientRect(); if (Math.abs(r.width - this.state.fw) > 2 || Math.abs(r.height - this.state.fh) > 2) this.setState({ fw: r.width, fh: r.height }); }); this._ro.observe(el); } this.syncSel(); }, 300);
+  }
+  componentWillUnmount() { if (this._ro) this._ro.disconnect(); clearInterval(this._p); clearInterval(this._attach); window.removeEventListener('wb-metro-ready', this._r); }
+  componentDidUpdate() { this.syncSel(); }
+  syncSel() { if (this.fromRef.current && this.fromRef.current.value !== this.state.from) this.fromRef.current.value = this.state.from; if (this.toRef.current && this.toRef.current.value !== this.state.to) this.toRef.current.value = this.state.to; }
+  full() { const x0 = -3 * C, y0 = 2 * C, w = 94 * C, h = 79 * C, ar = this.state.fw / this.state.fh; if (w / h < ar) { const nw = h * ar; return { x: x0 - (nw - w) / 2, y: y0, w: nw, h }; } const nh = w / ar; return { x: x0, y: y0 - (nh - h) / 2, w, h: nh }; }
+  vb() { return this.state.vb || this.full(); }
+  zoomAt(k, cx, cy) {
+    const el = this.frameRef.current; if (!el || !window.WB_METRO) return;
+    const r = el.getBoundingClientRect(), v = this.vb(), F = this.full();
+    const s = Math.max(v.w / r.width, v.h / r.height);
+    const ox = v.x + (v.w - r.width * s) / 2, oy = v.y + (v.h - r.height * s) / 2;
+    const px = ox + ((cx ?? r.left + r.width / 2) - r.left) * s, py = oy + ((cy ?? r.top + r.height / 2) - r.top) * s;
+    let w = Math.min(F.w * 1.15, Math.max(F.w / 8, v.w * k)), hh = w * v.h / v.w;
+    const kk = w / v.w;
+    this.setState({ vb: { x: px - (px - v.x) * kk, y: py - (py - v.y) * kk, w, h: hh } });
+  }
+  centerOn(name) {
+    const M = window.WB_METRO, s = M.stations[name]; if (!s) return;
+    const F = this.full(), w = F.w / 2.6, h = F.h / 2.6;
+    this.setState({ sel: name, vb: { x: s.x * C - w / 2, y: s.y * C - h / 2, w, h } });
+  }
+  lineMeta(id) { const M = window.WB_METRO; return M.lines.find(l => l.id === id); }
+  route() {
+    const M = window.WB_METRO, { from, to } = this.state;
+    if (!M || !M.stations[from] || !M.stations[to]) return null;
+    if (from === to) return { steps: [], time: 0, edges: [] };
+    const adj = {};
+    M.edges.forEach(e => {
+      const len = e.geo.reduce((a, p, i) => i ? a + Math.hypot(p[0] - e.geo[i - 1][0], p[1] - e.geo[i - 1][1]) : 0, 0);
+      const w = len * 0.5 + 1;
+      (adj[e.a] = adj[e.a] || []).push({ to: e.b, line: e.line, w, e });
+      (adj[e.b] = adj[e.b] || []).push({ to: e.a, line: e.line, w, e });
+    });
+    const dist = {}, prev = {}, Q = [];
+    M.stations[from].lines.forEach(l => { const k = from + '|' + l; dist[k] = 0; Q.push(k); });
+    const done = {};
+    while (Q.length) {
+      Q.sort((a, b) => dist[a] - dist[b]);
+      const k = Q.shift(); if (done[k]) continue; done[k] = 1;
+      const [st, ln] = k.split('|');
+      if (st === to) {
+        const path = []; let c = k; while (prev[c]) { path.unshift(prev[c]); c = prev[c].from; }
+        const steps = [];
+        path.forEach(p => { if (p.e) { const last = steps[steps.length - 1]; if (last && last.line === p.line) { last.to = p.to; last.n++; } else steps.push({ line: p.line, from: p.fromSt, to: p.to, n: 1 }); } });
+        return { steps, time: Math.round(dist[k]), edges: path.filter(p => p.e).map(p => p.e) };
+      }
+      const nb = (adj[st] || []).filter(n => n.line === ln).map(n => ({ k: n.to + '|' + ln, w: n.w, e: n.e, line: ln, to: n.to }));
+      M.stations[st].lines.forEach(l2 => { if (l2 !== ln) nb.push({ k: st + '|' + l2, w: 5, e: null, line: l2, to: st }); });
+      nb.forEach(n => { const d = dist[k] + n.w; if (dist[n.k] === undefined || d < dist[n.k]) { dist[n.k] = d; prev[n.k] = { from: k, fromSt: st, to: n.to, line: n.line, e: n.e }; Q.push(n.k); } });
+    }
+    return null;
+  }
+  buildSvg(routeEdges) {
+    const h = React.createElement, M = window.WB_METRO, v = this.vb(), { line, sel } = this.state;
+    const upp = Math.max(v.w / this.state.fw, v.h / this.state.fh);
+    const far = upp > 1.3, mid = upp > 0.98;
+    const fs = far ? Math.min(30, 12 * upp) : Math.min(17, Math.max(13, 11.5 * upp)), sk = Math.max(1, upp * 0.75);
+    const T = M.terrain;
+    const rpath = (pts, rad) => {
+      const P = pts.map(p => [p[1] * C, p[2] * C]); let d = 'M' + P[0][0] + ' ' + P[0][1];
+      for (let i = 1; i < P.length - 1; i++) {
+        const a = P[i - 1], b = P[i], c = P[i + 1];
+        const l1 = Math.hypot(b[0] - a[0], b[1] - a[1]), l2 = Math.hypot(c[0] - b[0], c[1] - b[1]);
+        const k = Math.min(rad, l1 / 2, l2 / 2);
+        const p1 = [b[0] - (b[0] - a[0]) / l1 * k, b[1] - (b[1] - a[1]) / l1 * k], p2 = [b[0] + (c[0] - b[0]) / l2 * k, b[1] + (c[1] - b[1]) / l2 * k];
+        d += 'L' + p1[0].toFixed(1) + ' ' + p1[1].toFixed(1) + 'Q' + b[0] + ' ' + b[1] + ' ' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1);
+      }
+      const z = P[P.length - 1]; return d + 'L' + z[0] + ' ' + z[1];
+    };
+    const kids = [
+      h('rect', { key: 'bg', x: -C * 60, y: -C * 30, width: (M.W + 120) * C, height: (M.H + 60) * C, fill: '#FBF8F1' }),
+      h('path', { key: 'p', d: T.parks, fill: '#CFE7C4' }),
+      h('path', { key: 'w', d: T.water, fill: '#BFDDE3' }),
+      h('path', { key: 'rv', d: T.river, fill: 'none', stroke: '#BFDDE3', strokeWidth: 30, strokeLinecap: 'round' }),
+      h('path', { key: 'ck', d: T.creek, fill: 'none', stroke: '#BFDDE3', strokeWidth: 18, strokeLinecap: 'round' }),
+      h('path', { key: 'is', d: T.islands, fill: '#CFE7C4', stroke: '#FBF8F1', strokeWidth: 6 })
+    ];
+    routeEdges.forEach((e, i) => kids.push(h('path', { key: 'r' + i, d: rpath(e.geo.map(p => [0, p[0], p[1]]), 40), fill: 'none', stroke: '#E2AC32', strokeOpacity: 0.55, strokeWidth: 30, strokeLinecap: 'round', strokeLinejoin: 'round' })));
+    const lineOn = (l) => !line || (l.branch || l.id) === line;
+    M.lines.forEach(l => kids.push(h('path', {
+      key: 'l' + l.id, d: rpath(l.pts, 46), fill: 'none', stroke: l.color, strokeWidth: l.dash ? 12 : 14,
+      strokeLinecap: l.dash ? 'butt' : 'round', strokeLinejoin: 'round', strokeDasharray: l.dash || null, opacity: lineOn(l) ? 1 : 0.12, style: { transition: 'opacity .3s', cursor: 'pointer' },
+      onClick: (ev) => { ev.stopPropagation(); this.setState(s => ({ line: s.line === (l.branch || l.id) ? null : (l.branch || l.id) })); }
+    })));
+    const dfs = Math.max(14, 12 * upp);
+    kids.push(h('text', { key: 't1', x: 12 * C + 14, y: 3 * C + dfs, fontFamily: 'Arial, Helvetica, sans-serif', fontSize: dfs, fontWeight: 700, fill: '#14213D' }, '↑ vers Wausau'));
+    kids.push(h('text', { key: 't2', x: 36 * C + 14, y: 76.5 * C, fontFamily: 'Arial, Helvetica, sans-serif', fontSize: dfs, fontWeight: 700, fill: '#14213D' }, '↓ vers Milwaukee · Chicago'));
+    const LINE_COL = {}; M.lines.forEach(l => { LINE_COL[l.branch || l.id] = l.color; });
+    const routeSt = {}; routeEdges.forEach(e => { routeSt[e.a] = 1; routeSt[e.b] = 1; });
+    const BIG = { 'Hargrove Heights': 1, 'Peninsula Point': 1, 'Oakwood Nord': 1, 'Aéroport WBY': 1, 'Aquadream Bay': 1, 'Westfield Beach': 1, 'Hargrove Lakeside': 1, 'Oakwood Centre': 1, 'Lakefront': 1 };
+    M.order.forEach(s => {
+      const x = s.x * C, y = s.y * C, multi = s.lines.length > 1, on = !line || s.lines.includes(line), isSel = sel === s.name;
+      const g = [];
+      if (isSel) g.push(h('circle', { key: 'h', cx: x, cy: y, r: 22, fill: '#E2AC32', opacity: 0.55 }));
+      if (multi) g.push(h('circle', { key: 'o', cx: x, cy: y, r: 10.5, fill: '#FFFFFF', stroke: '#14213D', strokeWidth: 4 }));
+      else g.push(h('circle', { key: 'o', cx: x, cy: y, r: 5.5, fill: '#FFFFFF', stroke: LINE_COL[s.lines[0]] || '#14213D', strokeWidth: 3.5 }));
+      const showLabel = isSel || (routeSt[s.name] && !far) || (far ? s.lines.length > 2 || BIG[s.name] : (mid ? multi || s.terminus : true));
+      const L = s.label || 'r', off = (multi ? 16 : 12) + (fs - 13) * 0.3;
+      let tp = { x: x + off, y: y + 4.5, textAnchor: 'start' };
+      if (L === 'l') tp = { x: x - off, y: y + 4.5, textAnchor: 'end' };
+      if (L === 'ur') tp = { x: x + off - 2, y: y + 4.5, textAnchor: 'start', transform: `rotate(-45 ${x} ${y})` };
+      if (L === 'dr') tp = { x: x + off - 2, y: y + 4.5, textAnchor: 'start', transform: `rotate(45 ${x} ${y})` };
+      if (L === 'ul') tp = { x: x - off + 2, y: y + 4.5, textAnchor: 'end', transform: `rotate(45 ${x} ${y})` };
+      if (L === 'dl') tp = { x: x - off + 2, y: y + 4.5, textAnchor: 'end', transform: `rotate(-45 ${x} ${y})` };
+      tp.y = y + fs * 0.35;
+      if (showLabel) g.push(h('text', { key: 't', ...tp, fontFamily: "'Public Sans', Arial, sans-serif", fontSize: fs, fontWeight: 700, fill: '#14213D', stroke: '#FBF8F1', strokeWidth: 3 * sk, strokeLinejoin: 'round', paintOrder: 'stroke', style: { pointerEvents: 'none' } }, s.name));
+      kids.push(h('g', { key: 's' + s.name, opacity: on || routeSt[s.name] ? 1 : 0.2, style: { cursor: 'pointer', transition: 'opacity .3s' }, onClick: (ev) => { ev.stopPropagation(); this.setState({ sel: s.name }); } },
+        h('circle', { cx: x, cy: y, r: 16, fill: 'transparent' }), ...g));
+    });
+    return h('svg', { viewBox: `${v.x} ${v.y} ${v.w} ${v.h}`, preserveAspectRatio: 'xMidYMid meet', style: { display: 'block', width: '100%', height: '100%', transition: this.state.drag ? 'none' : 'none' } }, ...kids);
+  }
+  renderVals() {
+    const M = window.WB_METRO;
+    const base = { modes: MODES, status: STATUS, fares: FARES, fromRef: this.fromRef, toRef: this.toRef, frameRef: this.frameRef, stop: (e) => e.stopPropagation() };
+    if (!M) return { ...base, stationOpts: [], fromOpts: [], toOpts: [], legend: [], routeSteps: [], routeTime: '', mapSvg: null, hasSel: false, sel: { lines: [] }, nStations: '' };
+    const opts = M.order.slice().sort((a, b) => a.name.localeCompare(b.name)).map(s => ({ id: s.name, name: s.name }));
+    const r = this.route();
+    const fgFor = (c) => ['#F0E000', '#FFD24D', '#A2A2A2', '#F28CB1'].includes(c) ? '#14213D' : '#FFFFFF';
+    const short = { R: 'Rouge', O: 'Orange', G: 'Verte', B: 'Bleue', P: 'Violette', Y: 'Jaune', A: 'AX', T: 'Tram', C: 'Train', F: 'Navette' };
+    const routeSteps = !r ? [{ line: '—', color: '#56607A', fg: '#FFFFFF', text: 'Aucun itinéraire' }] : (r.steps.length ? r.steps.map(st => { const l = this.lineMeta(st.line); return { line: short[st.line], color: l.color, fg: fgFor(l.color), text: `${st.from} → ${st.to} · ${st.n} arrêt${st.n > 1 ? 's' : ''}` }; }) : [{ line: '✷', color: '#E2AC32', fg: '#14213D', text: 'Vous y êtes déjà.' }]);
+    const merged = M.lines.filter(l => !l.branch);
+    const s = M.stations[this.state.sel];
+    const v = this.vb();
+    return {
+      ...base,
+      nStations: M.order.length,
+      stationOpts: opts,
+      fromOpts: opts.map(o => ({ ...o, sel: o.id === this.state.from })), toOpts: opts.map(o => ({ ...o, sel: o.id === this.state.to })),
+      setFrom: (e) => this.setState({ from: e.target.value }), setTo: (e) => this.setState({ to: e.target.value }),
+      routeSteps, routeTime: r && r.time ? `≈ ${r.time + 2} min` : '',
+      legend: [{ name: 'Tout le réseau', swatch: 'linear-gradient(90deg,#BD1038,#DF8600,#F0E000,#00B251,#0896D7,#8E10C1)', id: null, termini: '' }, ...merged.map(l => ({ name: l.name, swatch: l.dash ? `repeating-linear-gradient(90deg,${l.color} 0 7px,transparent 7px 11px)` : l.color, id: l.id, termini: l.stations[0] + ' ↔ ' + l.stations[l.stations.length - 1] }))].map(b => ({
+        ...b, bg: this.state.line === b.id ? '#F7F3EA' : '#FFFFFF', border: this.state.line === b.id ? '#14213D' : '#DDD5C3', pick: () => this.setState({ line: b.id })
+      })),
+      mapSvg: this.buildSvg(r ? r.edges : []),
+      cursor: this.state.drag ? 'grabbing' : 'grab',
+      onDown: (e) => { if (e.button !== 0) return; if (e.target.closest && e.target.closest('button,input,a')) return; e.preventDefault(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} this.setState({ drag: { x: e.clientX, y: e.clientY, vb: this.vb(), moved: false } }); },
+      onMove: (e) => {
+        const d = this.state.drag; if (!d) return; e.preventDefault();
+        const el = this.frameRef.current, rr = el.getBoundingClientRect(), sc = Math.max(d.vb.w / rr.width, d.vb.h / rr.height);
+        const dx = (e.clientX - d.x) * sc, dy = (e.clientY - d.y) * sc;
+        if (Math.abs(e.clientX - d.x) + Math.abs(e.clientY - d.y) > 3) this.setState({ vb: { ...d.vb, x: d.vb.x - dx, y: d.vb.y - dy } });
+      },
+      onUp: () => { if (this.state.drag) this.setState({ drag: null }); },
+      zoomIn: () => this.zoomAt(0.7), zoomOut: () => this.zoomAt(1.4), zoomReset: () => this.setState({ vb: null }),
+      onSearch: (e) => { if (M.stations[e.target.value]) this.centerOn(e.target.value); },
+      hasSel: !!s,
+      sel: s ? { name: s.name, district: s.district, lines: s.lines.map((id, i) => { const l = this.lineMeta(id); return { name: l.name, color: l.color, next: `${1 + (s.x * 3 + s.y + i * 2) % 6} min` }; }) } : { lines: [] },
+      clearSel: () => this.setState({ sel: null }),
+      setAsFrom: () => this.setState({ from: this.state.sel }), setAsTo: () => this.setState({ to: this.state.sel })
+    };
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><title>Les districts — Wellington Bay</title></helmet>
+<dc-import name="Header" active="districts" hint-size="100%,124px"></dc-import>
+<main style="font-family:'Public Sans',system-ui,sans-serif;color:#14213D">
+  <section style="max-width:1320px;margin:0 auto;padding:80px 32px 56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:56px;align-items:end">
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;gap:10px;font-size:14px;color:#56607A"><a href="Accueil.dc.html">Accueil</a><span>/</span><span>Districts</span></div>
+      <h1 style="margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:clamp(48px,7vw,96px);line-height:.95;letter-spacing:-.025em;color:#1F3567">Les cinq districts</h1>
+    </div>
+    <p style="margin:0;font-size:19px;line-height:1.65;color:#2B3650;text-wrap:pretty">De l'hypercentre historique aux plages du lac Michigan, Wellington Bay se compose de cinq districts aux identités bien distinctes. Chacun a été pensé pour éviter l'impression d'écrasement des grandes métropoles, grâce aux parcs, jardins communs et aires de jeu qui les rythment.</p>
+  </section>
+  <section style="max-width:1320px;margin:0 auto;padding:0 32px 100px;display:flex;flex-direction:column;gap:20px">
+    <sc-for list="{{ items }}" as="d" hint-placeholder-count="5">
+      <a href="{{ d.href }}" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));background:#FFFFFF;color:#14213D" style-hover="color:#1F3567;box-shadow:0 16px 40px rgba(20,33,61,.12)">
+        <div style="min-height:340px;background:#ddd url('{{ d.img }}') center/cover"></div>
+        <div style="padding:44px 48px;display:flex;flex-direction:column;gap:16px;justify-content:center;border-left:6px solid {{ d.color }}">
+          <div style="display:flex;align-items:center;gap:14px"><span style="font-family:'Source Serif 4',Georgia,serif;font-size:18px;font-weight:600;color:#8A6A1E">{{ d.n }}</span><span style="font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#56607A">{{ d.zone }}</span></div>
+          <span style="font-family:'Source Serif 4',Georgia,serif;font-size:clamp(36px,4vw,52px);font-weight:600;line-height:1;letter-spacing:-.02em">{{ d.name }}</span>
+          <span style="font-size:17px;line-height:1.65;color:#2B3650;max-width:520px">{{ d.text }}</span>
+          <span style="font-weight:700;color:#1F3567;margin-top:6px">Découvrir le district →</span>
+        </div>
+      </a>
+    </sc-for>
+  </section>
+  <section style="background:#1F3567;color:#FFFFFF">
+    <div style="max-width:1320px;margin:0 auto;padding:64px 32px;display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;gap:10px"><span style="font-family:'Source Serif 4',Georgia,serif;font-size:36px;font-weight:600">Où se trouve chaque district ?</span><span style="font-size:17px;color:#D5DCEA">Consultez la carte des districts de l'agglomération.</span></div>
+      <a href="Carte.dc.html" style="padding:16px 34px 16px 24px;background:#E2AC32;color:#14213D;font-weight:700;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 50%,calc(100% - 14px) 100%,0 100%)" style-hover="background:#F0C462;color:#14213D">Ouvrir la carte</a>
+    </div>
+  </section>
+</main>
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const U = (id) => `https://images.unsplash.com/photo-${id}?w=1200&q=75&auto=format&fit=crop`;
+    return { items: [
+      { n: '01', name: 'Downtown', zone: 'Centre-ville · Haute densité', color: '#C8483B', href: 'District-Downtown.dc.html', img: U('1480714378408-67cf0d13bc1b'), text: "L'épicentre culturel, commercial et administratif du comté de Brown, où les ruelles pavées de l'ancienne colonie anglaise côtoient des gratte-ciel de plus de 250 mètres." },
+      { n: '02', name: 'Westfield', zone: 'Zone balnéaire · Zone dense', color: '#4A5FA8', href: 'District-Westfield.dc.html', img: 'img/doc/image18.png', text: "Une oasis balnéaire sur les rives du lac Michigan : port de plaisance, plages, vie nocturne et le parc aquatique Aquadream Bay." },
+      { n: '03', name: 'Millbrook', zone: 'Banlieue dense · Haute densité', color: '#2D5A4A', href: 'District-Millbrook.dc.html', img: U('1460472178825-e5240623afd5'), text: "La vaste banlieue aux tours vitrées de 60 à 150 mètres, ponctuée de parcs et reliée au centre par trois lignes de métro." },
+      { n: '04', name: 'Oakwood', zone: 'Périurbain · Basse densité', color: '#2F7C78', href: 'District-Oakwood.dc.html', img: 'img/doc/image15.png', text: "Au nord-est, des pavillons modernes, des rues arborées, des complexes résidentiels de faible hauteur et des industries de pointe." },
+      { n: '05', name: 'Hargrove', zone: 'Périurbain · Moyenne densité', color: '#B8861C', href: 'District-Hargrove.dc.html', img: U('1570129477492-45c003edd2be'), text: "Le premier district résidentiel de la ville, traditionnel et mixte, aux loyers attractifs et tout proche de la Baie." }
+    ] };
+  }
+}
+</script>
+</body>
+</html>
